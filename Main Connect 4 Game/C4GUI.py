@@ -20,12 +20,31 @@ QUIT_PATH = os.path.join(CURR_DIR, "assets", "QuitB.png")
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Menu")
 
-# load a bg image
-BG = pygame.image.load(BG_PATH).convert_alpha()
-
 
 def get_font(size):
     return pygame.font.Font(FONT_PATH, size)
+
+
+def scale_image(image, target_width, target_height):
+    img_width, img_height = image.get_size()
+    scale = min(target_width / img_width, target_height / img_height)
+    new_width = int(img_width * scale)
+    new_height = int(img_height * scale)
+    return pygame.transform.scale(image, (new_width, new_height))
+
+
+def load_and_scale_button(path, target_width, target_height):
+    try:
+        image = pygame.image.load(path)
+        return pygame.transform.scale(image, (target_width, target_height))
+    except pygame.error as e:
+        print(f"Error loading image {path}: {e}")
+        return None
+
+
+# Load a background image
+BG = pygame.image.load(BG_PATH)
+BG = scale_image(BG, WIDTH, HEIGHT)
 
 
 def play():
@@ -35,12 +54,30 @@ def play():
         SCREEN.fill("black")
 
         PLAY_TEXT = get_font(45).render("This is the PLAY screen.", True, "White")
-        PLAY_RECT = PLAY_TEXT.get_rect(center=(640, 260))
+        PLAY_RECT = PLAY_TEXT.get_rect(center=(650, 100))
         SCREEN.blit(PLAY_TEXT, PLAY_RECT)
+
+        AI_V_HUMAN = Button(
+            image=None,
+            pos=(650, 200),
+            text_input="HUMAN VS AI",
+            font=get_font(75),
+            base_color="White",
+            hovering_color="Green",
+        )
+
+        AI_V_AI = Button(
+            image=None,
+            pos=(650, 350),
+            text_input="AI VS AI",
+            font=get_font(75),
+            base_color="White",
+            hovering_color="Green",
+        )
 
         PLAY_BACK = Button(
             image=None,
-            pos=(640, 460),
+            pos=(650, 500),
             text_input="BACK",
             font=get_font(75),
             base_color="White",
@@ -49,6 +86,12 @@ def play():
 
         PLAY_BACK.changeColor(PLAY_MOUSE_POS)
         PLAY_BACK.update(SCREEN)
+
+        AI_V_HUMAN.changeColor(PLAY_MOUSE_POS)
+        AI_V_HUMAN.update(SCREEN)
+
+        AI_V_AI.changeColor(PLAY_MOUSE_POS)
+        AI_V_AI.update(SCREEN)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -105,33 +148,41 @@ def main_menu():
         MENU_TEXT = get_font(100).render("CONNECT 4 MENU", True, "#b68f40")
         MENU_RECT = MENU_TEXT.get_rect(center=(640, 100))
 
+        SCREEN.blit(MENU_TEXT, MENU_RECT)
+
+        # Adjustable Width and Height for Buttons
+        button_width = 150
+        button_height = 150
+
         # Menu Buttons
         PLAY_BUTTON = Button(
-            image=pygame.image.load(PLAY_PATH).convert_alpha(),
-            pos=(640, 250),
-            text_input="PLAY",
+            image=load_and_scale_button(PLAY_PATH, button_width, button_height),
+            pos=(500, 350),
+            text_input="",
             font=get_font(75),
             base_color="#d7fcd4",
             hovering_color="White",
         )
         OPTIONS_BUTTON = Button(
-            image=pygame.image.load(OPT_PATH).convert_alpha(),
-            pos=(640, 350),
-            text_input="OPTIONS",
+            image=load_and_scale_button(OPT_PATH, button_width, button_height),
+            pos=(800, 350),
+            text_input="",
             font=get_font(75),
             base_color="#d7fcd4",
             hovering_color="White",
         )
         QUIT_BUTTON = Button(
-            image=pygame.image.load(QUIT_PATH).convert_alpha(),
-            pos=(640, 450),
-            text_input="QUIT",
+            image=load_and_scale_button(QUIT_PATH, button_width, button_height),
+            pos=(650, 500),
+            text_input="",
             font=get_font(75),
             base_color="#d7fcd4",
             hovering_color="White",
         )
 
-        SCREEN.blit(MENU_TEXT, MENU_RECT)
+        PLAY_BUTTON.update(SCREEN)
+        OPTIONS_BUTTON.update(SCREEN)
+        QUIT_BUTTON.update(SCREEN)
 
         # Event Listener
         for event in pygame.event.get():
