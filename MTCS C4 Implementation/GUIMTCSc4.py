@@ -9,6 +9,8 @@ BOARD_ROWS = 6
 BOARD_COLS = 7
 CELL_SIZE = 100
 RADIUS = CELL_SIZE // 2 - 5
+
+# Color Constants
 WHITE = (255, 255, 255)
 BLUE = (0, 0, 255)
 BLACK = (0, 0, 0)
