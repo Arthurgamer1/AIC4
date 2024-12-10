@@ -100,8 +100,77 @@ def play():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
                     main_menu()
+                if AI_V_HUMAN.checkForInput(PLAY_MOUSE_POS):
+                    humanAI()
+                if AI_V_AI.checkForInput(PLAY_MOUSE_POS):
+                    pass
 
         pygame.display.update()
+
+
+def humanAI():
+    while True:
+        PLAY_MOUSE_POS = pygame.mouse.get_pos()
+
+        SCREEN.fill("black")
+
+        PLAY_TEXT = get_font(45).render("Choose an AI to go against!", True, "White")
+        PLAY_RECT = PLAY_TEXT.get_rect(center=(650, 100))
+        SCREEN.blit(PLAY_TEXT, PLAY_RECT)
+
+        MTCS = Button(
+            image=None,
+            pos=(650, 200),
+            text_input="Human VS MTCS Algorithm",
+            font=get_font(75),
+            base_color="White",
+            hovering_color="Green",
+        )
+
+        MINIMAX = Button(
+            image=None,
+            pos=(650, 350),
+            text_input="Human vs Minimax Algorithm",
+            font=get_font(75),
+            base_color="White",
+            hovering_color="Green",
+        )
+
+        PLAY_BACK = Button(
+            image=None,
+            pos=(650, 500),
+            text_input="BACK",
+            font=get_font(75),
+            base_color="White",
+            hovering_color="Green",
+        )
+
+        PLAY_BACK.changeColor(PLAY_MOUSE_POS)
+        PLAY_BACK.update(SCREEN)
+
+        MTCS.changeColor(PLAY_MOUSE_POS)
+        MTCS.update(SCREEN)
+
+        MINIMAX.changeColor(PLAY_MOUSE_POS)
+        MINIMAX.update(SCREEN)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
+                    play()
+                if MTCS.checkForInput(PLAY_MOUSE_POS):
+                    pass
+                if MINIMAX.checkForInput(PLAY_MOUSE_POS):
+                    pass
+
+        pygame.display.update()
+
+
+def AIvAI():
+    pass
 
 
 def options():
