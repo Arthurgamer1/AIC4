@@ -234,4 +234,4 @@ def simulate_games(num_games):
     print(f"Draws: {draws}")
 
 # Run the simulation
-simulate_games(100)
+simulate_games(1000)

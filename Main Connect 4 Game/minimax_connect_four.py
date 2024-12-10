@@ -303,4 +303,4 @@ while not game_over:
             turn = PLAYER
 
     if game_over:
-        pygame.time.wait(3000)
+        pygame.time.wait(5000)
