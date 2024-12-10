@@ -30,48 +30,62 @@ pygame.init()
 screen = pygame.display.set_mode(size)
 myfont = pygame.font.SysFont("monospace", 75)
 
+
 # Game functions
 def create_board():
     board = np.full((ROW_COUNT, COLUMN_COUNT), EMPTY)
     return board
 
+
 def drop_piece(board, row, col, piece):
     board[row][col] = piece
 
+
 def is_valid_location(board, col):
     return board[ROW_COUNT - 1][col] == EMPTY
+
 
 def get_next_open_row(board, col):
     for r in range(ROW_COUNT):
         if board[r][col] == EMPTY:
             return r
 
+
 def winning_move(board, piece):
     # Horizontal check
     for c in range(COLUMN_COUNT - 3):
         for r in range(ROW_COUNT):
-            if board[r][c] == piece and all(board[r][c+i] == piece for i in range(1, 4)):
+            if board[r][c] == piece and all(
+                board[r][c + i] == piece for i in range(1, 4)
+            ):
                 return True
 
     # Vertical check
     for c in range(COLUMN_COUNT):
         for r in range(ROW_COUNT - 3):
-            if board[r][c] == piece and all(board[r+i][c] == piece for i in range(1, 4)):
+            if board[r][c] == piece and all(
+                board[r + i][c] == piece for i in range(1, 4)
+            ):
                 return True
 
     # Positive diagonal check
     for c in range(COLUMN_COUNT - 3):
         for r in range(ROW_COUNT - 3):
-            if board[r][c] == piece and all(board[r+i][c+i] == piece for i in range(1, 4)):
+            if board[r][c] == piece and all(
+                board[r + i][c + i] == piece for i in range(1, 4)
+            ):
                 return True
 
     # Negative diagonal check
     for c in range(COLUMN_COUNT - 3):
         for r in range(3, ROW_COUNT):
-            if board[r][c] == piece and all(board[r-i][c+i] == piece for i in range(1, 4)):
+            if board[r][c] == piece and all(
+                board[r - i][c + i] == piece for i in range(1, 4)
+            ):
                 return True
 
     return False
+
 
 def evaluate_window(window, piece):
     score = 0
@@ -88,6 +102,8 @@ def evaluate_window(window, piece):
         score -= 4
 
     return score
+
+
 def score_position(board, piece):
     score = 0
 
@@ -98,34 +114,40 @@ def score_position(board, piece):
 
     # Horizontal scoring
     for r in range(ROW_COUNT):
-        row_array = [int(i) for i in list(board[r,:])]
+        row_array = [int(i) for i in list(board[r, :])]
         for c in range(COLUMN_COUNT - 3):
-            window = row_array[c:c + WINDOW_LENGTH]
+            window = row_array[c : c + WINDOW_LENGTH]
             score += evaluate_window(window, piece)
 
     # Vertical scoring
     for c in range(COLUMN_COUNT):
-        col_array = [int(i) for i in list(board[:,c])]
+        col_array = [int(i) for i in list(board[:, c])]
         for r in range(ROW_COUNT - 3):
-            window = col_array[r:r + WINDOW_LENGTH]
+            window = col_array[r : r + WINDOW_LENGTH]
             score += evaluate_window(window, piece)
 
     # Positive diagonal scoring
     for r in range(ROW_COUNT - 3):
         for c in range(COLUMN_COUNT - 3):
-            window = [board[r+i][c+i] for i in range(WINDOW_LENGTH)]
+            window = [board[r + i][c + i] for i in range(WINDOW_LENGTH)]
             score += evaluate_window(window, piece)
 
     # Negative diagonal scoring
     for r in range(ROW_COUNT - 3):
         for c in range(COLUMN_COUNT - 3):
-            window = [board[r+3-i][c+i] for i in range(WINDOW_LENGTH)]
+            window = [board[r + 3 - i][c + i] for i in range(WINDOW_LENGTH)]
             score += evaluate_window(window, piece)
 
     return score
 
+
 def is_terminal_node(board):
-    return winning_move(board, PLAYER) or winning_move(board, AI) or len(get_valid_locations(board)) == 0
+    return (
+        winning_move(board, PLAYER)
+        or winning_move(board, AI)
+        or len(get_valid_locations(board)) == 0
+    )
+
 
 def minimax(board, depth, alpha, beta, maximizingPlayer):
     valid_locations = get_valid_locations(board)
@@ -173,26 +195,58 @@ def minimax(board, depth, alpha, beta, maximizingPlayer):
                 break
         return column, value
 
+
 def get_valid_locations(board):
     return [c for c in range(COLUMN_COUNT) if is_valid_location(board, c)]
+
 
 def get_ai_move(board, depth=5):
     col, _ = minimax(board, depth, -math.inf, math.inf, True)
     return col
 
+
 def draw_board(board):
     for c in range(COLUMN_COUNT):
         for r in range(ROW_COUNT):
-            pygame.draw.rect(screen, BLUE, (c*SQUARESIZE, r*SQUARESIZE + SQUARESIZE, SQUARESIZE, SQUARESIZE))
-            pygame.draw.circle(screen, BLACK, (int(c*SQUARESIZE + SQUARESIZE/2), int(r*SQUARESIZE + SQUARESIZE + SQUARESIZE/2)), RADIUS)
-    
+            pygame.draw.rect(
+                screen,
+                BLUE,
+                (c * SQUARESIZE, r * SQUARESIZE + SQUARESIZE, SQUARESIZE, SQUARESIZE),
+            )
+            pygame.draw.circle(
+                screen,
+                BLACK,
+                (
+                    int(c * SQUARESIZE + SQUARESIZE / 2),
+                    int(r * SQUARESIZE + SQUARESIZE + SQUARESIZE / 2),
+                ),
+                RADIUS,
+            )
+
     for c in range(COLUMN_COUNT):
         for r in range(ROW_COUNT):
             if board[r][c] == PLAYER:
-                pygame.draw.circle(screen, RED, (int(c*SQUARESIZE + SQUARESIZE/2), height - int(r*SQUARESIZE + SQUARESIZE/2)), RADIUS)
+                pygame.draw.circle(
+                    screen,
+                    RED,
+                    (
+                        int(c * SQUARESIZE + SQUARESIZE / 2),
+                        height - int(r * SQUARESIZE + SQUARESIZE / 2),
+                    ),
+                    RADIUS,
+                )
             elif board[r][c] == AI:
-                pygame.draw.circle(screen, YELLOW, (int(c*SQUARESIZE + SQUARESIZE/2), height - int(r*SQUARESIZE + SQUARESIZE/2)), RADIUS)
+                pygame.draw.circle(
+                    screen,
+                    YELLOW,
+                    (
+                        int(c * SQUARESIZE + SQUARESIZE / 2),
+                        height - int(r * SQUARESIZE + SQUARESIZE / 2),
+                    ),
+                    RADIUS,
+                )
     pygame.display.update()
+
 
 # Game Initialization
 board = create_board()
@@ -226,7 +280,7 @@ while not game_over:
 
                     if winning_move(board, PLAYER):
                         label = myfont.render("Player 1 wins!", 1, RED)
-                        screen.blit(label, (40,10))
+                        screen.blit(label, (40, 10))
                         game_over = True
 
                     turn = AI
@@ -242,7 +296,7 @@ while not game_over:
 
             if winning_move(board, AI):
                 label = myfont.render("AI wins!", 1, YELLOW)
-                screen.blit(label, (40,10))
+                screen.blit(label, (40, 10))
                 game_over = True
 
             draw_board(board)
@@ -250,4 +304,3 @@ while not game_over:
 
     if game_over:
         pygame.time.wait(3000)
-
