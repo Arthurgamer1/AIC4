@@ -1,22 +1,31 @@
 import pygame
 import sys
+import os
 from button import Button
 
 pygame.init()
 
 # Constant Variables
-WIDTH = 1920
-HEIGHT = 1080
+WIDTH = 1280
+HEIGHT = 720
+CURR_DIR = os.path.dirname(__file__)
+
+# Get Paths
+BG_PATH = os.path.join(CURR_DIR, "assets", "BG1.png")
+FONT_PATH = os.path.join(CURR_DIR, "assets", "erasfont.ttf")
+PLAY_PATH = os.path.join(CURR_DIR, "assets", "PlayB.png")
+OPT_PATH = os.path.join(CURR_DIR, "assets", "OptionsB.png")
+QUIT_PATH = os.path.join(CURR_DIR, "assets", "QuitB.png")
 
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Menu")
 
 # load a bg image
-BG = pygame.image.load("assets/BG1.png")
+BG = pygame.image.load(BG_PATH).convert_alpha()
 
 
 def get_font(size):
-    return pygame.font.Font("assets/erasfont.ttf", size)
+    return pygame.font.Font(FONT_PATH, size)
 
 
 def play():
@@ -98,7 +107,7 @@ def main_menu():
 
         # Menu Buttons
         PLAY_BUTTON = Button(
-            image=pygame.image.load("assets/OptionsB.png"),
+            image=pygame.image.load(PLAY_PATH).convert_alpha(),
             pos=(640, 250),
             text_input="PLAY",
             font=get_font(75),
@@ -106,17 +115,17 @@ def main_menu():
             hovering_color="White",
         )
         OPTIONS_BUTTON = Button(
-            image=pygame.image.load("assets/PlayB.png"),
-            pos=(640, 250),
-            text_input="PLAY",
+            image=pygame.image.load(OPT_PATH).convert_alpha(),
+            pos=(640, 350),
+            text_input="OPTIONS",
             font=get_font(75),
             base_color="#d7fcd4",
             hovering_color="White",
         )
         QUIT_BUTTON = Button(
-            image=pygame.image.load("assets/QuitB.png"),
-            pos=(640, 250),
-            text_input="PLAY",
+            image=pygame.image.load(QUIT_PATH).convert_alpha(),
+            pos=(640, 450),
+            text_input="QUIT",
             font=get_font(75),
             base_color="#d7fcd4",
             hovering_color="White",
