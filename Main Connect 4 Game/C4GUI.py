@@ -1,6 +1,7 @@
 import pygame
 import sys
 import os
+import subprocess
 from button import Button
 
 pygame.init()
@@ -103,7 +104,9 @@ def play():
                 if AI_V_HUMAN.checkForInput(PLAY_MOUSE_POS):
                     humanAI()
                 if AI_V_AI.checkForInput(PLAY_MOUSE_POS):
-                    pass
+                    subprocess.Popen(
+                        ["python", os.path.join(CURR_DIR, "Visual_MC_Minimax.py")]
+                    )
 
         pygame.display.update()
 
@@ -162,15 +165,18 @@ def humanAI():
                 if PLAY_BACK.checkForInput(PLAY_MOUSE_POS):
                     play()
                 if MTCS.checkForInput(PLAY_MOUSE_POS):
-                    pass
+                    subprocess.Popen(
+                        [
+                            "python",
+                            os.path.join(CURR_DIR, "monte_carlo_connect_four.py"),
+                        ]
+                    )
                 if MINIMAX.checkForInput(PLAY_MOUSE_POS):
-                    pass
+                    subprocess.Popen(
+                        ["python", os.path.join(CURR_DIR, "connect_four.py")]
+                    )
 
         pygame.display.update()
-
-
-def AIvAI():
-    pass
 
 
 def options():
