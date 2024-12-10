@@ -105,7 +105,7 @@ def play():
                     humanAI()
                 if AI_V_AI.checkForInput(PLAY_MOUSE_POS):
                     subprocess.Popen(
-                        ["python", os.path.join(CURR_DIR, "Visual_MC_Minimax.py")]
+                        ["python", os.path.join(CURR_DIR, "Visual_MC_vs_Minimax.py")]
                     )
 
         pygame.display.update()
@@ -173,7 +173,7 @@ def humanAI():
                     )
                 if MINIMAX.checkForInput(PLAY_MOUSE_POS):
                     subprocess.Popen(
-                        ["python", os.path.join(CURR_DIR, "connect_four.py")]
+                        ["python", os.path.join(CURR_DIR, "minimax_connect_four.py")]
                     )
 
         pygame.display.update()
